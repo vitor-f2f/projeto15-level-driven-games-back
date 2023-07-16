@@ -6,5 +6,6 @@ const gamesRouter = express.Router();
 
 gamesRouter.use(validateAuth);
 gamesRouter.get("/games", getProducts);
+gamesRouter.get("/game/:id");
 
 export default gamesRouter;
