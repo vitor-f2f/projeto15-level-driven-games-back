@@ -35,6 +35,8 @@ export const signUp = async (req, res) => {
             email: signupInfo.email,
             password: password,
             balance: 0,
+            cart: [],
+            purchases: [],
         };
 
         await db.collection("users").insertOne(signupObj);
@@ -67,9 +69,12 @@ export const signIn = async (req, res) => {
 
         if (passwordCheck) {
             const token = uuid();
-            await db
-                .collection("sessions")
-                .insertOne({ userId: user._id, created: Date.now(), token });
+            const sessionObj = {
+                userId: user._id,
+                created: Date.now(),
+                token,
+            };
+            await db.collection("sessions").insertOne(sessionObj);
             const response = {
                 name: user.name,
                 token: token,
