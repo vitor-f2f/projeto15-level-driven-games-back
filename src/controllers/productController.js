@@ -12,12 +12,11 @@ export const getProducts = async (req, res) => {
 
 export const getGame = async (req, res) => {
   try {
-    const param = req.params;
-    param = param.replace(":", "");
+    const { id } = req.params;
 
     const game = await db
       .collection("games")
-      .findOne({ _id: new ObjectId(param) });
+      .findOne({ _id: new ObjectId(id.replace(/:/, "")) });
     if (!game) return res.status(404).send("Jogo não encontrado!");
     res.status(200).send(game);
   } catch (err) {
