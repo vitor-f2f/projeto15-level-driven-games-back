@@ -5,6 +5,7 @@ export const addProduct = async (req, res) => {
   try {
     const { session } = res.locals;
     const { productId } = req.body;
+    
 
     const userId = session.userId;
     const user = await db
@@ -17,8 +18,9 @@ export const addProduct = async (req, res) => {
     if (user.cart.includes(productId)) {
       return res.status(400).send("Produto já está selecionado");
     }
-
+    
     user.cart.push(productId);
+    await db.collection('users').updateOne({ _id: new ObjectId(userId) },{$set:user});
 
     res.status(200).json({
       success: true,
@@ -33,6 +35,7 @@ export const addProduct = async (req, res) => {
 
 export const removeProduct = async (req, res) => {
   try {
+    //const {autor}
     const { session } = res.locals;
     const { productId } = req.body;
 
