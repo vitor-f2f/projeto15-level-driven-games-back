@@ -35,7 +35,6 @@ export const addProduct = async (req, res) => {
 
 export const removeProduct = async (req, res) => {
   try {
-    //const {autor}
     const { session } = res.locals;
     const { productId } = req.body;
 
@@ -76,11 +75,18 @@ export const getCart = async (req, res) => {
     }
 
     const cart = user.cart;
+    
+    const novo = (cart.map((i)=>{
+      try{
+        const num = new ObjectId(i)
+        return num
+      }catch(err){
+        return undefined
+      }
+    }))
+    const novo_no = novo.filter((i)=>{if (i){return true}})
 
-    return res.status(200).json({
-      success: true,
-      cart: cart,
-    });
+    return res.status(200).send(await db.collection('games').find({_id:{$in:novo_no}}).toArray());
   } catch (error) {
     console.log(error);
     return res.status(500).send("Erro ao obter carrinho de compras");
